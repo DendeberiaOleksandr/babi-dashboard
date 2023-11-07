@@ -82,7 +82,7 @@ function QuestionForm() {
     <div className="flex flex-1 flex-row">
       <form
         onSubmit={e => handleOnSave(e)}
-        className="rounded-md px-4 py-2 flex flex-1 flex-row bg-primary"
+        className="px-4 py-2 flex flex-1 flex-row bg-primary"
       >
         <input
           onChange={e => setText(e.currentTarget.value)}

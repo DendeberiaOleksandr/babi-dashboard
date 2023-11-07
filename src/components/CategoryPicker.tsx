@@ -5,9 +5,11 @@ import { FaCircleDot } from "react-icons/fa6";
 
 type Props = {
   selectedCategories: number[];
-  setSelectedCategories: any;
-  categoriesError: string;
-  setCategoriesError: any;
+  setSelectedCategories: (categoriesId: number[]) => void;
+  categoriesError?: string;
+  setCategoriesError?: any;
+  style?: string;
+  borderStyle?: string;
 };
 
 function CategoryPicker({
@@ -15,6 +17,8 @@ function CategoryPicker({
   setSelectedCategories,
   categoriesError,
   setCategoriesError,
+  style,
+  borderStyle
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: categories, error, isLoading } = useGetCategoriesQuery();
@@ -33,7 +37,7 @@ function CategoryPicker({
     <div className="relative w-[320px]">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`${categoriesError ? 'border-red-500 text-red-500' : 'border-l-primary border-r-yellow border-t-yellow border-b-yellow'} cursor-pointer border-2 text-primary w-full h-full flex items-center justify-center px-4 py-2 bg-yellow`}
+        className={`${categoriesError ? 'border-red-500 text-red-500' : `${borderStyle ? borderStyle : 'border-l-primary border-r-yellow border-t-yellow border-b-yellow'}`} ${style ? style : 'cursor-pointer border-2 text-primary w-full h-full flex items-center justify-center px-4 py-2 bg-yellow'}`}
       >
         Category
       </div>

@@ -1,12 +1,12 @@
 import QuestionForm from '@/components/QuestionForm'
-import QuestionsGrid from '@/components/QuestionsGrid'
+import QuestionsTree from '@/components/QuestionsTree'
 import React from 'react'
 
 function QuestionsPage() {
   return (
     <div className='flex flex-1 flex-col'>
         <QuestionForm/>
-        <QuestionsGrid/>
+        <QuestionsTree/>
     </div>
   )
 }
