@@ -10,6 +10,8 @@ type Props = {
   setCategoriesError?: any;
   style?: string;
   borderStyle?: string;
+  widthStyle?: string;
+  dropdownStyle?: string;
 };
 
 function CategoryPicker({
@@ -18,7 +20,9 @@ function CategoryPicker({
   categoriesError,
   setCategoriesError,
   style,
-  borderStyle
+  borderStyle,
+  widthStyle,
+  dropdownStyle
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: categories, error, isLoading } = useGetCategoriesQuery();
@@ -34,7 +38,7 @@ function CategoryPicker({
   };
 
   return (
-    <div className="relative w-[320px]">
+    <div className={`relative ${widthStyle ? widthStyle : 'w-[320px]'}`}>
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={`${categoriesError ? 'border-red-500 text-red-500' : `${borderStyle ? borderStyle : 'border-l-primary border-r-yellow border-t-yellow border-b-yellow'}`} ${style ? style : 'cursor-pointer border-2 text-primary w-full h-full flex items-center justify-center px-4 py-2 bg-yellow'}`}
@@ -42,7 +46,7 @@ function CategoryPicker({
         Category
       </div>
       {isOpen && categories && (
-        <ul className="absolute flex flex-col w-full bg-primary z-50">
+        <ul className={`absolute flex flex-col w-full z-50 ${dropdownStyle ? dropdownStyle : 'bg-primary'}`}>
           {categories.map((category, index) => (
             <li
               onClick={(e) => handleCategoryClick(category.id)}

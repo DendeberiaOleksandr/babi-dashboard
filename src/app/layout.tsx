@@ -1,10 +1,7 @@
 "use client";
-import Sidebar from "@/components/Sidebar";
 import "./globals.css";
-import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
-import { useSecured } from "@/hooks/useSecured";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { AiFillHome, AiFillQuestionCircle } from "react-icons/ai";
 import { TbCategoryFilled } from "react-icons/tb";
-import { MdAccountTree } from "react-icons/md";
+import { HiBuildingStorefront } from "react-icons/hi2";
 import { usePathname } from "next/navigation";
 
 type Route = {
@@ -27,15 +27,15 @@ const routes: Route[] = [
   },
   {
     id: 3,
-    text: "Question Tree",
-    icon: <MdAccountTree />,
-    path: "/panel/tree",
-  },
-  {
-    id: 4,
     text: "Questions",
     icon: <AiFillQuestionCircle />,
     path: "/panel/questions",
+  },
+  {
+    id: 4,
+    text: "Places",
+    icon: <HiBuildingStorefront />,
+    path: "/panel/places",
   },
 ];
 

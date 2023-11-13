@@ -3,6 +3,7 @@ import {
   Question,
   QuestionUpdate,
   useGetQuestionsQuery,
+  useRemoveQuestionMutation,
   useUpdateQuestionsMutation,
 } from "@/slices/questionSlice";
 import React, { useCallback, useEffect, useState } from "react";
@@ -45,6 +46,8 @@ function QuestionsTree() {
     isLoading: isCategoriesLoading,
   } = useGetCategoriesQuery();
   const [updateQuestions] = useUpdateQuestionsMutation();
+
+  const [removeQuestion] = useRemoveQuestionMutation();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -172,6 +175,14 @@ function QuestionsTree() {
         setUpdatedQuestions([]);
         setSelectedQiestions([]);
       });
+  };
+
+  const handleRemove = () => {
+    removeQuestion(selectedQuestionCard?.id!)
+    .then(res => {})
+    .finally(() => {
+      setSelectedQuestionCard(undefined);
+    })
   };
 
   const handleUnlink = () => {
@@ -341,6 +352,18 @@ function QuestionsTree() {
               }`}
             >
               Unlink
+            </button>
+
+            <button
+              onClick={() => handleRemove()}
+              disabled={!selectedQuestionCard}
+              className={`px-4 py-2 rounded-md text-white transition-colors duration-200 ${
+                selectedQuestionCard
+                  ? "bg-red-500 cursor-pointer hover:bg-red-600"
+                  : "bg-red-300 opacity-40"
+              }`}
+            >
+              Remove
             </button>
           </div>
 
