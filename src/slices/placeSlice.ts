@@ -1,7 +1,21 @@
 import baseQuery from "@/baseQuery";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getSession } from "next-auth/react";
-import { Category } from "./categorySlice";
+
+export interface PlaceCriteria {
+  page: number;
+  size: number;
+  placeId?: number;
+  categoryId?: number;
+  placeState?: PlaceState;
+  addingDateFrom?: Date;
+  addingDateTo?: Date;
+  route?: string;
+  locality?: string;
+  administrativeAreaLevel1?: string;
+  country?: string;
+  postalCode?: string;
+  administrativeAreaLevel2?: string;
+}
 
 export interface Place {
   id?: number;
