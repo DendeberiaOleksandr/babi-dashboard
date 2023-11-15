@@ -1,5 +1,6 @@
 import baseQuery from "@/baseQuery";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Category } from "./categorySlice";
 
 export interface PlaceCriteria {
   page: number;
@@ -17,11 +18,17 @@ export interface PlaceCriteria {
   administrativeAreaLevel2?: string;
 }
 
+export interface PlacePageable {
+  data: Place[]
+  totalElements: number
+}
+
 export interface Place {
   id?: number;
   name?: string;
   imagesId?: number[];
   categoriesId?: number[];
+  categories?: Category[];
   pageLink?: string;
   addingDate?: Date;
   placeState?: PlaceState;
@@ -57,6 +64,19 @@ export const placeSlice = createApi({
   baseQuery: baseQuery,
   tagTypes: ["Place", "Category"],
   endpoints: (builder) => ({
+    getPlaces: builder.query<PlacePageable, PlaceCriteria>({
+      query: (criteria: PlaceCriteria) => ({
+        url: '/places',
+        params: criteria
+      }),
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: "Place" as const, id })),
+              "Place",
+            ]
+          : ["Place"],
+    }),
     createPlace: builder.mutation<Place, Place>({
       query: (body) => ({
         url: '/places',
@@ -64,10 +84,11 @@ export const placeSlice = createApi({
         body
       }),
       invalidatesTags: ["Place"],
-    })
+    }),
   }),
 });
 
 export const {
+  useGetPlacesQuery,
   useCreatePlaceMutation,
 } = placeSlice;

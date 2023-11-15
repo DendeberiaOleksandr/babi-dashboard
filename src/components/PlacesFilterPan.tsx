@@ -1,10 +1,7 @@
 "use client";
 import { useGetCategoriesQuery } from "@/slices/categorySlice";
 import { PlaceCriteria, PlaceState } from "@/slices/placeSlice";
-import React, { useEffect, useRef, useState } from "react";
-import { KeyValuePair } from "tailwindcss/types/config";
-import "react-datepicker/dist/react-datepicker.css";
-import { DatePicker } from "antd";
+import React, { useState } from "react";
 
 type Props = {
   placeCriteria: PlaceCriteria;
@@ -24,6 +21,9 @@ type CriteriaTextInput = {
 const inputClass = "px-4 py-2 rounded-md shadow bg-white";
 
 function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
+
+  const [criteria, setCriteria] = useState<PlaceCriteria>(placeCriteria);
+
   const {
     data: categories,
     error: categoriesError,
@@ -61,12 +61,16 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
     },
   ];
 
+  const handleSearch = () => {
+    setPlaceCriteria(criteria);
+  };
+
   return (
     <form className="bg-primary rounded-md w-full px-4 py-2 flex flex-col gap-4">
       <div className="w-full grid grid-cols-4 gap-4">
         {categories && (
           <Select
-            value={placeCriteria.categoryId}
+            value={criteria.categoryId}
             defaultValue="category"
             defaultValueText="Category"
             valueKey="categoryId"
@@ -78,7 +82,7 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
         )}
 
         <Select
-          value={placeCriteria.placeState}
+          value={criteria.placeState}
           defaultValue="placeState"
           defaultValueText="Place State"
           valueKey="placeState"
@@ -103,11 +107,11 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
             key={textInput.key}
             placeholder={textInput.placeholder}
             type="text"
-            value={(placeCriteria as any)[textInput.key]}
+            value={(criteria as any)[textInput.key] ?? ''}
             className={inputClass}
             onChange={(e) =>
-              setPlaceCriteria({
-                ...placeCriteria,
+              setCriteria({
+                ...criteria,
                 [textInput.key]: e.target.value,
               })
             }
@@ -115,12 +119,16 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
         ))}
       </div>
 
-      <div className="grid grid-rows-1 grid-cols-4 gap-4">
+      <div className="grid grid-rows-1 grid-cols-2 gap-4">
         <div className="flex flex-col">
           <label className="rounded-md bg-white px-4 rounded-b-none shadow text-gray-400 pb-1 border-b-gray-200 border-2">
             Adding Date From
           </label>
           <input
+            onChange={e => setCriteria({
+              ...criteria,
+              addingDateFrom: new Date(e.target.value)
+            })}
             type="datetime-local"
             className={`${inputClass} py-0 pb-1 rounded-t-none`}
           />
@@ -130,6 +138,10 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
             Adding Date To
           </label>
           <input
+          onChange={e => setCriteria({
+            ...criteria,
+            addingDateTo: new Date(e.target.value)
+          })}
             type="datetime-local"
             className={`${inputClass} py-0 pb-1 rounded-t-none`}
           />
@@ -141,11 +153,20 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
           className={`px-4 py-2 rounded-md shadow bg-green-400 cursor-pointer hover:bg-green-500 duration-200 transition-colors text-white font-semibold`}
           type="button"
           value={"Search"}
+          onClick={handleSearch}
         />
         <input
           className={`px-4 py-2 rounded-md shadow bg-red-400 cursor-pointer hover:bg-red-500 duration-200 transition-colors text-white font-semibold`}
           type="button"
           value={"Reset"}
+          onClick={(e) => {
+            const resetCriteria: PlaceCriteria = {
+              page: 0,
+              size: 25
+            }
+            setCriteria(resetCriteria);
+            setPlaceCriteria(resetCriteria);
+          }}
         />
       </div>
     </form>
@@ -173,13 +194,13 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
         onChange={(e) => {
           const val = e.target.value;
           if (val === defaultValue) {
-            setPlaceCriteria({
-              ...placeCriteria,
+            setCriteria({
+              ...criteria,
               [valueKey]: undefined,
             });
           } else {
-            setPlaceCriteria({
-              ...placeCriteria,
+            setCriteria({
+              ...criteria,
               [valueKey]: +val,
             });
           }
