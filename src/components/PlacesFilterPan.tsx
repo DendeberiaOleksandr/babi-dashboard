@@ -1,6 +1,7 @@
 "use client";
+import { APPROVED, HIDDEN, REVIEW } from "@/const/placeState";
 import { useGetCategoriesQuery } from "@/slices/categorySlice";
-import { PlaceCriteria, PlaceState } from "@/slices/placeSlice";
+import { PlaceCriteria } from "@/slices/placeSlice";
 import React, { useState } from "react";
 
 type Props = {
@@ -88,16 +89,16 @@ function PlacesFilterPan({ placeCriteria, setPlaceCriteria }: Props) {
           valueKey="placeState"
           values={[
             {
-              key: PlaceState.APPROVED + 1,
-              value: PlaceState[PlaceState.APPROVED],
+              key: APPROVED,
+              value: APPROVED,
             },
             {
-              key: PlaceState.HIDDEN + 1,
-              value: PlaceState[PlaceState.HIDDEN],
+              key: HIDDEN,
+              value: HIDDEN,
             },
             {
-              key: PlaceState.REVIEW + 1,
-              value: String(PlaceState[PlaceState.REVIEW]),
+              key: REVIEW,
+              value: REVIEW,
             },
           ]}
         />

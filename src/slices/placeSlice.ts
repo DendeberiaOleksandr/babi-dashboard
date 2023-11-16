@@ -7,7 +7,7 @@ export interface PlaceCriteria {
   size: number;
   placeId?: number;
   categoryId?: number;
-  placeState?: PlaceState;
+  placeState?: string;
   addingDateFrom?: Date;
   addingDateTo?: Date;
   route?: string;
@@ -31,7 +31,7 @@ export interface Place {
   categories?: Category[];
   pageLink?: string;
   addingDate?: Date;
-  placeState?: PlaceState;
+  placeState?: string;
   address?: Address;
 }
 
@@ -46,10 +46,6 @@ export type Address = {
   longitude?: number;
   latitude?: number;
 };
-
-export enum PlaceState {
-    APPROVED, REVIEW, HIDDEN
-}
 
 export interface QuestionInitialState {
   places: Place[];

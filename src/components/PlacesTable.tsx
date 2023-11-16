@@ -1,13 +1,20 @@
 import { Place } from "@/slices/placeSlice";
 import React from "react";
+import { FaTrash } from "react-icons/fa";
 
 type Props = {
   places: Place[];
+  setSelectedPlace: (place: Place) => void;
 };
 
 const borderClass = 'border-2 border-primary px-4 py-2';
 
-function PlacesTable({ places }: Props) {
+function PlacesTable({ places, setSelectedPlace }: Props) {
+
+  const handlePlaceClick = (place: Place) => {
+    setSelectedPlace(place);
+  };
+
   return (
     <table className={`border-collapse ${borderClass}`}>
       <thead className={borderClass}>
@@ -27,21 +34,22 @@ function PlacesTable({ places }: Props) {
           <th className={borderClass}>St. Number</th>
           <th className={borderClass}>Longitude</th>
           <th className={borderClass}>Latitude</th>
+          <th className={borderClass}>Delete</th>
         </tr>
       </thead>
       <tbody className={borderClass}>
         {places &&
           places.map((place) => (
             <tr className={`${borderClass} hover:bg-gray-300 duration-200 transition-colors cursor-pointer`} key={place.id}>
-              <td className={borderClass}>{place.id}</td>
-              <td className={borderClass}>{place.name}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.id}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.name}</td>
               <td className={borderClass}>
                 {
                     place.categories && place.categories.length > 0 && (
-                        <select className="bg-transparent" defaultValue={place.categories[0].id}>
+                        <select className="bg-transparent px-4 py-2" defaultValue={place.categories[0].id}>
                             {
                                 place.categories.map(category => (
-                                    <option value={category.id} key={`place-${place.id}-cat-${category.id}`}>
+                                    <option className="px-4 py-2" value={category.id} key={`place-${place.id}-cat-${category.id}`}>
                                         {category.name}
                                     </option>
                                 ))
@@ -50,18 +58,23 @@ function PlacesTable({ places }: Props) {
                     )
                 }
               </td>
-              <td className={borderClass}>{String(place.addingDate)}</td>
-              <td className={borderClass}>{place.pageLink}</td>
-              <td className={borderClass}>{place.placeState}</td>
-              <td className={borderClass}>{place.address?.country}</td>
-              <td className={borderClass}>{place.address?.administrativeAreaLevel1}</td>
-              <td className={borderClass}>{place.address?.administrativeAreaLevel2}</td>
-              <td className={borderClass}>{place.address?.locality}</td>
-              <td className={borderClass}>{place.address?.postalCode}</td>
-              <td className={borderClass}>{place.address?.route}</td>
-              <td className={borderClass}>{place.address?.streetNumber}</td>
-              <td className={borderClass}>{place.address?.longitude}</td>
-              <td className={borderClass}>{place.address?.latitude}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{String(place.addingDate)}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.pageLink}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.placeState}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.country}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.administrativeAreaLevel1}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.administrativeAreaLevel2}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.locality}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.postalCode}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.route}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.streetNumber}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.longitude}</td>
+              <td onClick={(e) => handlePlaceClick(place)} className={borderClass}>{place.address?.latitude}</td>
+              <td className={borderClass}>
+                <label className="flex items-center justify-center text-red-400 hover:text-red-500 cursor-pointer">
+                  <FaTrash/>
+                </label>
+              </td>
             </tr>
           ))}
       </tbody>

@@ -4,10 +4,11 @@ import { AiFillFileImage } from "react-icons/ai";
 import CategoryPicker from "./CategoryPicker";
 import { useSession } from "next-auth/react";
 import { FaXmark } from "react-icons/fa6";
-import { Address, Place, PlaceState, useCreatePlaceMutation } from "@/slices/placeSlice";
+import { Address, Place, useCreatePlaceMutation } from "@/slices/placeSlice";
 import PlaceStatePicker from "./PlaceStatePicker";
 import { usePlacesWidget } from "react-google-autocomplete";
 import axios from "axios";
+import { APPROVED } from "@/const/placeState";
 
 type Inputs = {
   name: string;
@@ -32,8 +33,8 @@ function PlacesForm({ handleClose }: Props) {
   const [categoriesError, setCategoriesError] = useState<string>("");
 
   const [selectedPlaceState, setSelectedPlaceState] = useState<
-    PlaceState | undefined
-  >();
+    string
+  >(APPROVED);
   const [placeStatesError, setPlaceStatesError] = useState<string>("");
 
   const [images, setImages] = useState<Image[]>([]);
@@ -306,7 +307,11 @@ function PlacesForm({ handleClose }: Props) {
           style="bg-white text-black rounded-sm my-2 px-4 py-2 cursor-pointer shadow hover:bg-gray-200 transition-colors duration-200 text-center"
           borderStyle="border-none"
           selectedState={selectedPlaceState}
-          setSelectedState={setSelectedPlaceState}
+          setSelectedState={(placeState) => {
+            if (placeState) {
+              setSelectedPlaceState(placeState);
+            }
+          }}
           statesError={placeStatesError}
           setStatesError={setPlaceStatesError}
         />

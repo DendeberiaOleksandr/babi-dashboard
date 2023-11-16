@@ -12,6 +12,9 @@ type Props = {
   borderStyle?: string;
   widthStyle?: string;
   dropdownStyle?: string;
+  optionStyle?: string;
+  selectedOptionStyle?: string;
+  dotStyle?: string;
 };
 
 function CategoryPicker({
@@ -22,7 +25,10 @@ function CategoryPicker({
   style,
   borderStyle,
   widthStyle,
-  dropdownStyle
+  dropdownStyle,
+  optionStyle,
+  selectedOptionStyle,
+  dotStyle
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: categories, error, isLoading } = useGetCategoriesQuery();
@@ -50,13 +56,13 @@ function CategoryPicker({
           {categories.map((category, index) => (
             <li
               onClick={(e) => handleCategoryClick(category.id)}
-              className={`flex items-center gap-2 cursor-pointer hover:bg-secondary text-yellow font-semibold px-4 py-2 ${
-                selectedCategories.includes(category.id) && "bg-secondary"
+              className={`${optionStyle ?? 'flex items-center gap-2 cursor-pointer hover:bg-secondary text-yellow font-semibold px-4 py-2'} ${
+                selectedCategories.includes(category.id) && (selectedOptionStyle ?? "bg-secondary")
               }`}
               key={category.id}
             >
               {selectedCategories?.includes(category.id) && (
-                <label className="text-yellow">
+                <label className={`${dotStyle ?? 'text-yellow'}`}>
                   <FaCircleDot />
                 </label>
               )}

@@ -1,38 +1,39 @@
 "use client";
+import { placeStates } from "@/const/placeState";
 import { useGetCategoriesQuery } from "@/slices/categorySlice";
-import { PlaceState } from "@/slices/placeSlice";
 import React, { useEffect, useState } from "react";
 import { FaCircleDot } from "react-icons/fa6";
 
 type Props = {
-  selectedState?: PlaceState;
-  setSelectedState: (selectedState: PlaceState | undefined) => void;
+  selectedState: string;
+  setSelectedState: (selectedState: string | undefined) => void;
   statesError?: string;
   setStatesError?: any;
   style?: string;
   borderStyle?: string;
   widthStyle?: string;
   dropdownStyle?: string;
+  optionStyle?: string;
+  selectedOptionStyle?: string;
+  dotStyle?: string;
 };
 
 function PlaceStatePicker({
-    selectedState,
-    setSelectedState,
-    statesError,
-    setStatesError,
+  selectedState,
+  setSelectedState,
+  statesError,
+  setStatesError,
   style,
   borderStyle,
   widthStyle,
-  dropdownStyle
+  dropdownStyle,
+  optionStyle,
+  selectedOptionStyle,
+  dotStyle
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const placeStates: PlaceState[] = [
-    PlaceState.APPROVED,
-    PlaceState.HIDDEN,
-    PlaceState.REVIEW
-  ];
 
-  const handlePlaceStateClick = (placeState: PlaceState) => {
+  const handlePlaceStateClick = (placeState: string) => {
     if (selectedState === placeState) {
         setSelectedState(undefined);
     } else {
@@ -53,17 +54,17 @@ function PlaceStatePicker({
           {placeStates.map((placeState, index) => (
             <li
               onClick={(e) => handlePlaceStateClick(placeState)}
-              className={`flex items-center gap-2 cursor-pointer hover:bg-secondary text-yellow font-semibold px-4 py-2 ${
-                selectedState === placeState && "bg-secondary"
+              className={`${optionStyle ?? 'flex items-center gap-2 cursor-pointer hover:bg-secondary text-yellow font-semibold px-4 py-2'} ${
+                selectedState === placeState && (selectedOptionStyle ?? "bg-secondary")
               }`}
               key={placeState}
             >
-              {selectedState === placeState && (
-                <label className="text-yellow">
+              { (selectedState === placeState) && (
+                <label className={`${dotStyle ?? "text-yellow"}`}>
                   <FaCircleDot />
                 </label>
               )}
-              {PlaceState[placeState]}
+              {placeState}
             </li>
           ))}
         </ul>
