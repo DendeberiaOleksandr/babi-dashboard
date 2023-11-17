@@ -52,7 +52,7 @@ function CategoryPicker({
         Category
       </div>
       {isOpen && categories && (
-        <ul className={`absolute flex flex-col w-full z-50 ${dropdownStyle ? dropdownStyle : 'bg-primary'}`}>
+        <ul className={`overflow-y-auto absolute flex flex-col w-full z-50 ${dropdownStyle ? dropdownStyle : 'bg-primary'}`}>
           {categories.map((category, index) => (
             <li
               onClick={(e) => handleCategoryClick(category.id)}

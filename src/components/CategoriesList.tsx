@@ -16,30 +16,31 @@ type Props = {
 
 function CategoriesList({ filter, setFilter }: Props) {
   const { data: categories, error, isLoading } = useGetCategoriesQuery();
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>()
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>();
 
   useEffect(() => {
-    if(!isLoading && categories) {
-      setFilteredCategories(categories.filter(category => {
-        let isMatch = true;
+    if (!isLoading && categories) {
+      setFilteredCategories(
+        categories.filter((category) => {
+          let isMatch = true;
 
-        if(filter.id) {
-          isMatch = false;
-          if(filter.id === category.id) {
-            isMatch = true;
+          if (filter.id) {
+            isMatch = false;
+            if (filter.id === category.id) {
+              isMatch = true;
+            }
           }
-        }
 
-        if(filter.name) {
-          isMatch = false;
-          if(category.name.includes(filter.name)) {
-            isMatch = true;
+          if (filter.name) {
+            isMatch = false;
+            if (category.name.includes(filter.name)) {
+              isMatch = true;
+            }
           }
-        }
 
-        return isMatch;
-
-      }))
+          return isMatch;
+        })
+      );
     }
   }, [categories, filter, isLoading]);
 
@@ -50,19 +51,21 @@ function CategoriesList({ filter, setFilter }: Props) {
   const thClass = "p-[15px] border border-primary";
 
   return (
-    <table className="text-left border border-primary border-collapse">
-      <thead>
-        <tr>
-          <th className={thClass}>Id</th>
-          <th className={thClass}>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {filteredCategories?.map((category) => (
-          <CategoryRow key={category.id} category={category} />
-        ))}
-      </tbody>
-    </table>
+    <div className="w-full h-[750px] overflow-y-auto">
+      <table className="w-full h-vh text-lef border-collapse">
+        <thead>
+          <tr>
+            <th className={thClass}>Id</th>
+            <th className={thClass}>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredCategories?.map((category) => (
+            <CategoryRow key={category.id} category={category} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -46,7 +46,7 @@ function PlacesPage() {
           </div>
 
           {!isLoading && placePageable && placePageable.totalElements > 0 && (
-            <>
+            <div className="w-[1424px]">
               <div className="mt-6 w-full">
                 <PlacesFilterPan
                   placeCriteria={placeCriteria}
@@ -81,7 +81,7 @@ function PlacesPage() {
                   />
                 </div>
               </section>
-            </>
+            </div>
           )}
 
           {formOpened && (
