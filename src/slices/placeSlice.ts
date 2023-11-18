@@ -81,10 +81,19 @@ export const placeSlice = createApi({
       }),
       invalidatesTags: ["Place"],
     }),
+    updatePlace: builder.mutation<Place, Place>({
+      query: (body) => ({
+        url: `/places/${body.id}`,
+        method: 'PUT',
+        body
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Place", id: arg.id }],
+    }),
   }),
 });
 
 export const {
   useGetPlacesQuery,
   useCreatePlaceMutation,
+  useUpdatePlaceMutation,
 } = placeSlice;

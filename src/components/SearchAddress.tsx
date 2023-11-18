@@ -5,10 +5,9 @@ import { usePlacesWidget } from "react-google-autocomplete";
 type Props = {
   onPlaceSelected: (place: any) => void;
   addressError: string;
-  defaultValue?: string;
 };
 
-function SearchAddress({ onPlaceSelected, addressError, defaultValue }: Props) {
+function SearchAddress({ onPlaceSelected, addressError }: Props) {
   const { ref } = usePlacesWidget<HTMLInputElement>({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: onPlaceSelected,
@@ -20,10 +19,9 @@ function SearchAddress({ onPlaceSelected, addressError, defaultValue }: Props) {
 
   return (
     <input
-      value={defaultValue}
       className={`${
         addressError && "border-2 border-red-500"
-      } w-full px-4 py-2 mt-6 bg-white rounded-sm my-2 shadow`}
+      } w-full px-4 py-2 bg-white rounded-md shadow-sm`}
       ref={ref}
       type="text"
       placeholder="Address"
