@@ -51,8 +51,8 @@ function CategoriesList({ filter, setFilter }: Props) {
   const thClass = "p-[15px] border border-primary";
 
   return (
-    <div className="w-full h-[750px] overflow-y-auto">
-      <table className="w-full h-vh text-lef border-collapse">
+    <div className="w-full h-[750px] overflow-y-auto border-2 border-primary">
+      <table className="w-full h-vh text-lef border-collaps">
         <thead>
           <tr>
             <th className={thClass}>Id</th>

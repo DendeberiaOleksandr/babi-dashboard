@@ -5,12 +5,13 @@ import { IoArrowBack } from "react-icons/io5";
 import { Image } from "next/dist/client/image-component";
 import { AiFillFileImage } from "react-icons/ai";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { Category } from "@/slices/categorySlice";
-import { TbPointFilled } from "react-icons/tb";
 import CategoryPicker from "./CategoryPicker";
 import PlaceStatePicker from "./PlaceStatePicker";
 import SearchAddress from "./SearchAddress";
+import { uploadImage } from "@/service/image.service";
+import { FaTrash } from "react-icons/fa";
+import { LuImagePlus } from "react-icons/lu";
 
 type Props = {
   place: Place;
@@ -23,9 +24,11 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
   const [addressError, setAddressError] = useState<string>("");
   const { data: session, status } = useSession();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const addImageRef = useRef<HTMLInputElement>(null);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [newPlace, setNewPlace] = useState<Place>();
   const [updatePlace] = useUpdatePlaceMutation();
+  const [lastChangedImageId, setLastChangedImageId] = useState<number>();
 
   useEffect(() => {
     setNewPlace(place);
@@ -33,38 +36,30 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
 
   useEffect(() => {
     if (address) {
-      setNewPlace(prevState => ({
+      setNewPlace((prevState) => ({
         ...prevState,
-        address: address
-      }))
+        address: address,
+      }));
     }
-  }, [address])
+  }, [address]);
 
   const handleChooseImage = (
     e: React.ChangeEvent<HTMLInputElement>,
-    imageId: number
   ) => {
     if (e.target.files) {
-      const imageForm = new FormData();
-      imageForm.append("file", e.target.files[0]!);
       const user: any = session?.user;
-      axios
-        .post(process.env.NEXT_PUBLIC_API_URL + "/images", imageForm, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            setIsUpdated(true);
-            setNewPlace((prevState) => ({
-              ...prevState,
-              imagesId: prevState?.imagesId
-                ?.filter((img) => img !== imageId)
-                .concat(res.data),
-            }));
-          }
-        });
+      uploadImage(e.target.files[0], user).then((res) => {
+        setIsUpdated(true);
+        let newImagesId = [...newPlace?.imagesId!, res];
+        if (lastChangedImageId) {
+          newImagesId = newImagesId.filter((id) => id !== lastChangedImageId);
+          setLastChangedImageId(undefined);
+        }
+        setNewPlace((prevState) => ({
+          ...prevState,
+          imagesId: newImagesId,
+        }));
+      });
     }
   };
 
@@ -75,8 +70,17 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
   const handleUpdate = () => {
     if (newPlace) {
       updatePlace(newPlace)
-        .then(res => {})
-        .finally(() => onBackClick())
+        .then((res) => {})
+        .finally(() => onBackClick());
+    }
+  };
+
+  const handleRemoveImage = (imageId: number) => {
+    if (newPlace?.imagesId && newPlace.imagesId.length > 1) {
+      setNewPlace((prevState) => ({
+        ...prevState,
+        imagesId: newPlace.imagesId!.filter((iId) => imageId !== iId),
+      }));
     }
   };
 
@@ -92,6 +96,22 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
       {newPlace && (
         <div className="mt-12 mx-auto w-[1560px]">
           <div className="flex flex-row gap-4 w-full mx-auto overflow-x-auto bg-gray-100 rounded-md px-4 py-8 shadow">
+            <div className="h-[186px] w-[178px] bg-gray-200 shadow flex flex-col justify-center items-center">
+              <label
+                onClick={() => addImageRef.current?.click()}
+                className="cursor-pointer bg-gray-400 hover:bg-gray-300 duration-200 transition-colors text-white rounded-full text-3xl w-[72px] h-[72px] flex flex-col justify-center items-center"
+              >
+                <LuImagePlus />
+              </label>
+
+              <input
+                onChange={(e) => handleChooseImage(e)}
+                className="hidden"
+                type="file"
+                ref={addImageRef}
+              />
+            </div>
+
             {newPlace.imagesId?.map((imageId) => (
               <div
                 key={imageId}
@@ -106,16 +126,28 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
                   src={`${process.env.NEXT_PUBLIC_API_URL}/images/${imageId}`}
                 />
 
-                <div
-                  onClick={() => hiddenFileInput?.current?.click()}
-                  className="cursor-pointer opacity-0 hover:opacity-90 flex flex-col items-center justify-center border-gray-300 absolute top-0 bottom-0 right-0 left-0 z-50 bg-gray-400 w-full h-full"
-                >
-                  <label className="text-white text-5xl">
+                <div className="opacity-0 hover:opacity-100 z-40 flex flex-row gap-4 items-center justify-center absolute top-0 bottom-0 right-0 left-0 w-full h-full">
+                  <label
+                    onClick={() => {
+                      setLastChangedImageId(imageId);
+                      hiddenFileInput?.current?.click();
+                    }}
+                    className="z-50 flex flex-col items-center justify-center shadow cursor-pointer text-white w-[42px] h-[42px] text-2xl rounded-full bg-primary"
+                  >
                     <AiFillFileImage />
                   </label>
+
+                  {newPlace?.imagesId?.length! > 1 && (
+                    <label
+                      onClick={() => handleRemoveImage(imageId)}
+                      className="flex flex-col items-center justify-center shadow cursor-pointer text-white w-[42px] h-[42px] text-2xl rounded-full bg-primary"
+                    >
+                      <FaTrash />
+                    </label>
+                  )}
                 </div>
                 <input
-                  onChange={(e) => handleChooseImage(e, imageId)}
+                  onChange={(e) => handleChooseImage(e)}
                   className="hidden"
                   type="file"
                   ref={hiddenFileInput}
@@ -372,7 +404,10 @@ function PlaceDetails({ place, onBackClick, categories }: Props) {
           </div>
 
           <div className="flex flex-row justify-start gap-4 mt-12">
-            <button onClick={handleUpdate} className="px-4 py-2 bg-green-400 hover:bg-green-500 transition-colors duration-200 shadow-md rounded-md text-white text-xl">
+            <button
+              onClick={handleUpdate}
+              className="px-4 py-2 bg-green-400 hover:bg-green-500 transition-colors duration-200 shadow-md rounded-md text-white text-xl"
+            >
               Update
             </button>
             <button

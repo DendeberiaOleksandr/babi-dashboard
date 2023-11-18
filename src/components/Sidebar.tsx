@@ -52,8 +52,8 @@ function Sidebar() {
             href={route.path}
             className={`bg-primary hover:bg-secondary transition-colors duration-200 px-4 py-1 rounded-sm text-lg font-semibold flex flex-row items-center justify-center gap-2  ${pathname === route.path ? 'bg-yellow text-primary' : 'text-white'}`}
           >
-            <span>{route.icon}</span>
-            <label>{route.text}</label>
+            <span className="cursor-pointer">{route.icon}</span>
+            <label className="cursor-pointer">{route.text}</label>
           </Link>
         ))}
       </div>
